@@ -1,7 +1,9 @@
 const axios = require('axios');
-const { err } = require('../utils/logger');
+const { log, err } = require('../utils/logger');
 
 function buildBase(url, id) { return `${url}/waInstance${id}`; }
+
+const MOCK = process.env.MOCK === '1';
 
 function greenClient({ url, id, token }) {
   const base = buildBase(url, id);
@@ -9,6 +11,10 @@ function greenClient({ url, id, token }) {
 
   return {
     async deleteMessage(chatId, idMessage) {
+      if (MOCK) {
+        log('[MOCK] deleteMessage:', { chatId, idMessage });
+        return { deleted: true };
+      }
       try {
         const { data } = await http.post(`${base}/deleteMessage/${token}`, { chatId, idMessage });
         return data;
@@ -16,6 +22,10 @@ function greenClient({ url, id, token }) {
     },
 
     async removeGroupParticipant(groupId, participantChatId) {
+      if (MOCK) {
+        log('[MOCK] removeGroupParticipant:', { groupId, participantChatId });
+        return { removed: true };
+      }
       try {
         const { data } = await http.post(`${base}/removeGroupParticipant/${token}`, { groupId, participantChatId });
         return data;
