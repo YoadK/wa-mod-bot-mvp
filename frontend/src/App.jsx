@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './App.css';
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
 
@@ -37,10 +38,10 @@ export default function App() {
   };
 
   return (
-    <div style={{ fontFamily: 'ui-sans-serif, system-ui', padding: 16, maxWidth: 1100, margin: '0 auto' }}>
+    <div className="app-container">
       <h1>WA Anti-Spam Admin</h1>
-      <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-        <div style={{ border: '1px solid #ddd', borderRadius: 8, padding: 12 }}>
+      <section className="stats-grid">
+        <div className="card">
           <h3>Stats (today)</h3>
           <p>Blocked: <b>{stats.totalToday}</b></p>
           <ul>
@@ -49,11 +50,11 @@ export default function App() {
             ))}
           </ul>
         </div>
-        <div style={{ border: '1px solid #ddd', borderRadius: 8, padding: 12 }}>
+        <div className="card">
           <h3>Add to Blacklist</h3>
           <form onSubmit={addBL}>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <input placeholder="phone (e.g., 9725...@c.us or raw)" value={phone} onChange={e => setPhone(e.target.value)} style={{ flex: 1 }} />
+            <div className="form-row">
+              <input placeholder="phone (e.g., 9725...@c.us or raw)" value={phone} onChange={e => setPhone(e.target.value)} />
               <input placeholder="reason" value={reason} onChange={e => setReason(e.target.value)} />
               <button type="submit">Add</button>
             </div>
@@ -61,54 +62,54 @@ export default function App() {
         </div>
       </section>
 
-      <h2 style={{ marginTop: 24 }}>Recent Events</h2>
-      <div style={{ overflow: 'auto', border: '1px solid #eee', borderRadius: 8 }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <h2 className="section-title">Recent Events</h2>
+      <div className="table-container">
+        <table className="data-table">
           <thead>
-            <tr style={{ background: '#fafafa' }}>
-              <th style={{ textAlign: 'left', padding: 8 }}>Time</th>
-              <th style={{ textAlign: 'left', padding: 8 }}>Sender</th>
-              <th style={{ textAlign: 'left', padding: 8 }}>Type</th>
-              <th style={{ textAlign: 'left', padding: 8 }}>Decision</th>
-              <th style={{ textAlign: 'left', padding: 8 }}>Rule</th>
-              <th style={{ textAlign: 'left', padding: 8 }}>Excerpt</th>
+            <tr>
+              <th>Time</th>
+              <th>Sender</th>
+              <th>Type</th>
+              <th>Decision</th>
+              <th>Rule</th>
+              <th>Excerpt</th>
             </tr>
           </thead>
           <tbody>
             {events.map(e => (
               <tr key={e._id}>
-                <td style={{ padding: 8 }}>{new Date(e.createdAt).toLocaleString()}</td>
-                <td style={{ padding: 8 }}>{e.sender}</td>
-                <td style={{ padding: 8 }}>{e.type}</td>
-                <td style={{ padding: 8 }}>{e.decision || e.status}</td>
-                <td style={{ padding: 8 }}>{e.ruleId || '—'}</td>
-                <td style={{ padding: 8 }}>{(e.text || '').slice(0, 80)}</td>
+                <td>{new Date(e.createdAt).toLocaleString()}</td>
+                <td>{e.sender}</td>
+                <td>{e.type}</td>
+                <td>{e.decision || e.status}</td>
+                <td>{e.ruleId || '—'}</td>
+                <td>{(e.text || '').slice(0, 80)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <h2 style={{ marginTop: 24 }}>Blacklist</h2>
-      <div style={{ border: '1px solid #eee', borderRadius: 8 }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <h2 className="section-title">Blacklist</h2>
+      <div className="table-container">
+        <table className="data-table">
           <thead>
-            <tr style={{ background: '#fafafa' }}>
-              <th style={{ textAlign: 'left', padding: 8 }}>Phone</th>
-              <th style={{ textAlign: 'left', padding: 8 }}>Reason</th>
-              <th style={{ textAlign: 'left', padding: 8 }}>Rule</th>
-              <th style={{ textAlign: 'left', padding: 8 }}>Added</th>
-              <th style={{ textAlign: 'left', padding: 8 }}>Actions</th>
+            <tr>
+              <th>Phone</th>
+              <th>Reason</th>
+              <th>Rule</th>
+              <th>Added</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {blacklist.map(b => (
               <tr key={b._id}>
-                <td style={{ padding: 8 }}>{b.phone}</td>
-                <td style={{ padding: 8 }}>{b.reason}</td>
-                <td style={{ padding: 8 }}>{b.ruleId || '—'}</td>
-                <td style={{ padding: 8 }}>{new Date(b.createdAt).toLocaleString()}</td>
-                <td style={{ padding: 8 }}>
+                <td>{b.phone}</td>
+                <td>{b.reason}</td>
+                <td>{b.ruleId || '—'}</td>
+                <td>{new Date(b.createdAt).toLocaleString()}</td>
+                <td>
                   <button onClick={() => delBL(b.phone)}>Remove</button>
                 </td>
               </tr>
