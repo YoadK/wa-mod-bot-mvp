@@ -25,67 +25,67 @@ const NEW_MEMBER = '972509999999@c.us';
 const GROUP_ID = process.env.COMMUNITY_GROUP_IDS?.split(',')[0] || '1234567890-1111@g.us';
 
 const messageTypes = {
-  spam: {
-    sender: SPAM_SENDER,
-    type: 'textMessage',
-    text: 'Amazing deal! Check this out: https://bit.ly/scam'
-  },
-  keyword: {
-    sender: SPAM_SENDER,
-    type: 'textMessage',
-    text: 'רוצה להרוויח? הלוואה מהירה! פורקס וקריפטו!'
-  },
-  clean: {
-    sender: CLEAN_SENDER,
-    type: 'textMessage',
-    text: 'Hello everyone, how are you doing today?'
-  },
-  media: {
-    sender: NEW_MEMBER,
-    type: 'imageMessage',
-    text: ''
-  },
-  link: {
-    sender: SPAM_SENDER,
-    type: 'textMessage',
-    text: 'Join our group: https://chat.whatsapp.com/invite123'
-  }
+    spam: {
+        sender: SPAM_SENDER,
+        type: 'textMessage',
+        text: 'Amazing deal! Check this out: https://bit.ly/scam'
+    },
+    keyword: {
+        sender: SPAM_SENDER,
+        type: 'textMessage',
+        text: 'רוצה להרוויח? הלוואה מהירה! פורקס וקריפטו!'
+    },
+    clean: {
+        sender: CLEAN_SENDER,
+        type: 'textMessage',
+        text: 'Hello everyone, how are you doing today?'
+    },
+    media: {
+        sender: NEW_MEMBER,
+        type: 'imageMessage',
+        text: ''
+    },
+    link: {
+        sender: SPAM_SENDER,
+        type: 'textMessage',
+        text: 'Join our group: https://chat.whatsapp.com/invite123'
+    }
 };
 
 async function sendTestMessage(type = 'spam', customText = null) {
-  const template = messageTypes[type] || messageTypes.spam;
+    const template = messageTypes[type] || messageTypes.spam;
 
-  const payload = {
-    typeWebhook: 'incomingMessageReceived',
-    idMessage: `TEST_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-    senderData: {
-      chatId: GROUP_ID,
-      sender: template.sender
-    },
-    messageData: {
-      typeMessage: template.type,
-      textMessageData: {
-        textMessage: customText || template.text
-      }
+    const payload = {
+        typeWebhook: 'incomingMessageReceived',
+        idMessage: `TEST_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        senderData: {
+            chatId: GROUP_ID,
+            sender: template.sender
+        },
+        messageData: {
+            typeMessage: template.type,
+            textMessageData: {
+                textMessage: customText || template.text
+            }
+        }
+    };
+
+    try {
+        console.log('Sending test message to webhook...');
+        console.log('Type:', type);
+        console.log('Sender:', template.sender);
+        console.log('Text:', customText || template.text);
+        console.log('---');
+
+        const response = await axios.post(API_URL, payload);
+        console.log('✓ Message sent successfully!');
+        console.log('Response status:', response.status);
+        console.log('\nCheck your worker logs and dashboard to see the moderation result.');
+    } catch (error) {
+        console.error('✗ Error sending message:');
+        console.error(error.response?.data || error.message);
+        process.exit(1);
     }
-  };
-
-  try {
-    console.log('Sending test message to webhook...');
-    console.log('Type:', type);
-    console.log('Sender:', template.sender);
-    console.log('Text:', customText || template.text);
-    console.log('---');
-
-    const response = await axios.post(API_URL, payload);
-    console.log('✓ Message sent successfully!');
-    console.log('Response status:', response.status);
-    console.log('\nCheck your worker logs and dashboard to see the moderation result.');
-  } catch (error) {
-    console.error('✗ Error sending message:');
-    console.error(error.response?.data || error.message);
-    process.exit(1);
-  }
 }
 
 // Parse CLI arguments
@@ -94,7 +94,7 @@ const type = args[0] || 'spam';
 const customText = args.slice(1).join(' ') || null;
 
 if (args.includes('--help') || args.includes('-h')) {
-  console.log(`
+    console.log(`
 Usage: node test-message.js [type] [text]
 
 Available types:
@@ -113,8 +113,25 @@ Examples:
   node test-message.js keyword "הימור על קריפטו"
   node test-message.js clean "Hi everyone!"
   `);
-  process.exit(0);
+    process.exit(0);
 }
 
 console.log('=== WhatsApp Test Message Generator ===\n');
 sendTestMessage(type, customText);
+
+// 06102025
+async function sendBatch() {
+    console.log('Sending batch of 5 test messages...');
+    for (let i = 0; i < 5; i++) {
+        await sendTestMessage('spam');
+        await new Promise(r => setTimeout(r, 500)); // 500ms delay
+    }
+    console.log('✓ Batch complete!');
+}
+
+// Check for --batch flag
+if (args.includes('--batch')) {
+    sendBatch();
+} else {
+    sendTestMessage(type, customText);
+}
