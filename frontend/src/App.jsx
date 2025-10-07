@@ -47,6 +47,11 @@ export default function App() {
         load();
     };
 
+    const delWL = async (p) => {
+        await fetch(`${API_BASE}/api/whitelist/${encodeURIComponent(p)}`, { method: 'DELETE' });
+        load();
+    };
+
     return (
         <div className="app-container">
             {/* // 06102025: line 51 */}
@@ -126,6 +131,33 @@ export default function App() {
                                 <td>{new Date(b.createdAt).toLocaleString()}</td>
                                 <td>
                                     <button onClick={() => delBL(b.phone)}>Remove</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+
+            <h2 className="section-title">Whitelist</h2>
+            <div className="table-container">
+                <table className="data-table">
+                    <thead>
+                        <tr>
+                            <th>Phone</th>
+                            <th>Note</th>
+                            <th>Added</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {whitelist.map(w => (
+                            <tr key={w._id}>
+                                <td>{w.phone}</td>
+                                <td>{w.note}</td>
+                                <td>{new Date(w.createdAt).toLocaleString()}</td>
+                                <td>
+                                    <button onClick={() => delWL(w.phone)}>Remove</button>
                                 </td>
                             </tr>
                         ))}
