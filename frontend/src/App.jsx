@@ -23,7 +23,7 @@ export default function App() {
 
     useEffect(() => { load(); }, []);
 
-    // 06102025
+
     //Add Auto-Refresh to Frontend Dashboard
     useEffect(() => {
         load();
@@ -54,13 +54,13 @@ export default function App() {
 
     return (
         <div className="app-container">
-            {/* // 06102025: line 51 */}
+
             <h1>WA Anti-Spam Admin {import.meta.env.MODE === 'development' && '<🧪 DEV MODE>'}</h1>
             <section className="stats-grid">
                 <div className="card">
                     <h3>Stats (today)</h3>
                     <p>Blocked: <b>{stats.totalToday}</b></p>
-                    {/* 06102025 */}
+
                     <p>Total Messages: <b>{events.length}</b></p>
                     <ul>
                         {stats.topRules.map(r => (

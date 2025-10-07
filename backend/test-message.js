@@ -84,7 +84,7 @@ async function sendTestMessage(type = 'spam', customText = null) {
     } catch (error) {
         console.error('✗ Error sending message:');
         console.error(error.response?.data || error.message);
-        process.exit(1);
+        throw error; //let the error bubble up
     }
 }
 
@@ -117,9 +117,7 @@ Examples:
 }
 
 console.log('=== WhatsApp Test Message Generator ===\n');
-sendTestMessage(type, customText);
 
-// 06102025
 async function sendBatch() {
     console.log('Sending batch of 5 test messages...');
     for (let i = 0; i < 5; i++) {
@@ -131,7 +129,8 @@ async function sendBatch() {
 
 // Check for --batch flag
 if (args.includes('--batch')) {
-    sendBatch();
+    sendBatch().catch(console.error);
 } else {
-    sendTestMessage(type, customText);
+    sendTestMessage(type, customText).catch(console.error);
 }
+
