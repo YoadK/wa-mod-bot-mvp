@@ -9,14 +9,16 @@ export default function App() {
     const [blacklist, setBlacklist] = useState([]);
     const [phone, setPhone] = useState('');
     const [reason, setReason] = useState('manual');
+    const [whitelist, setWhitelist] = useState([]);
 
     const load = async () => {
-        const [ev, bl, st] = await Promise.all([
+        const [ev, bl, wl, st] = await Promise.all([
             fetch(`${API_BASE}/api/events?limit=50`).then(r => r.json()),
             fetch(`${API_BASE}/api/blacklist`).then(r => r.json()),
+            fetch(`${API_BASE}/api/whitelist`).then(r => r.json()), // NEW
             fetch(`${API_BASE}/api/stats`).then(r => r.json())
         ]);
-        setEvents(ev); setBlacklist(bl); setStats(st);
+        setEvents(ev); setBlacklist(bl); setWhitelist(wl); setStats(st);
     };
 
     useEffect(() => { load(); }, []);
@@ -48,7 +50,7 @@ export default function App() {
     return (
         <div className="app-container">
             {/* // 06102025: line 51 */}
-            <h1>WA Anti-Spam Admin {import.meta.env.MODE === 'development' && '🧪 DEV MODE'}</h1>
+            <h1>WA Anti-Spam Admin {import.meta.env.MODE === 'development' && '<🧪 DEV MODE>'}</h1>
             <section className="stats-grid">
                 <div className="card">
                     <h3>Stats (today)</h3>
@@ -92,7 +94,9 @@ export default function App() {
                                 <td>{new Date(e.createdAt).toLocaleString()}</td>
                                 <td>{e.sender}</td>
                                 <td>{e.type}</td>
-                                <td>{e.decision || e.status}</td>
+                                <td className={e.decision === 'block' ? 'decision-block' : 'decision-allow'}>
+                                    {e.decision || e.status}
+                                </td>
                                 <td>{e.ruleId || '—'}</td>
                                 <td>{(e.text || '').slice(0, 80)}</td>
                             </tr>
