@@ -3,6 +3,7 @@ const shortenerRe = /(bit\.ly|t\.co|tinyurl\.com|goo\.gl|ow.ly|short.link|cutt.l
 const heKeywordsRe = /(הלווא|פורקס|קריפטו|הימור|סקס|xxx|porn|bet|forex|לוטו|קזינו|הימורים|loan|casino)/i;
 
 function evaluate({ text = '', type = 'unknown', joinedAgoMinutes = 9999, senderIsWhitelisted = false }) {
+    if (joinedAgoMinutes === -1) return { action: 'block', ruleId: 'unknown_join_time' };
     if (senderIsWhitelisted) return { action: 'allow', ruleId: 'whitelist' };
 
     if (linkRe.test(text)) return { action: 'block', ruleId: 'r_link' };
