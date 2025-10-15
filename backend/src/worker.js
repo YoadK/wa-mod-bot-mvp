@@ -100,7 +100,13 @@ async function processOne() {
         log('blocked', ev.sender, 'rule', decision.ruleId);
         return true;
     } catch (e) {
-        err('worker error', e?.response?.data || e.message);
+        err('worker error', {
+            error: e?.response?.data || e.message,
+            eventId: ev?._id,
+            idMessage: ev?.idMessage,
+            sender: ev?.sender,
+            ruleId: (typeof decision !== 'undefined' ? decision.ruleId : undefined)
+        });
         await Event.updateOne({ _id: ev?._id }, { $set: { status: 'ERROR' } });
         return true;
     }

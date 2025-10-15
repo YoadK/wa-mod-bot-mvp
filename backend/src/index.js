@@ -92,7 +92,14 @@ app.post('/webhooks/green', async (req, res) => {
 
         await Event.create({ idMessage, chatId, sender, type, text, status: 'NEW' });
     } catch (e) {
-        if (!String(e.message).includes('duplicate key')) err('webhook error', e?.response?.data || e.message);
+        if (!String(e.message).includes('duplicate key')) {
+            err('webhook error', {
+                error: e?.response?.data || e.message,
+                idMessage: req.body?.idMessage,
+                sender: req.body?.senderData?.sender,
+                chatId: req.body?.senderData?.chatId
+            });
+        }
     }
 });
 
