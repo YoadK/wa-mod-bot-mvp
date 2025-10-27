@@ -21,7 +21,7 @@ Environment
   GREEN_ID=your_green_id
   GREEN_TOKEN=your_green_token
   COMMUNITY_GROUP_IDS=123@g.us,456@g.us
-  PORT=3000
+  PORT=xxxx
   ```
 
 Start services (run each in its own terminal)
