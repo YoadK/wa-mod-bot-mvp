@@ -16,7 +16,7 @@ Install
 Environment
 - Create `backend/.env` with at least:
   ```
-  MONGO_URL=mongodb://user:pass@host:27017/dbname
+  MONGO_URL=mongodb://user:pass@host:xxxxx/dbname
   GREEN_URL=https://api.green.example
   GREEN_ID=your_green_id
   GREEN_TOKEN=your_green_token
