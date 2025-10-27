@@ -147,4 +147,4 @@ Notes / gotchas
 - Unknown member join times are represented as `joinedAgoMinutes === -1` — rules should handle that explicitly.
 - The worker consumes the `{ action, ruleId }` decision (e.g., `allow`, `block`, `review`).
 
-If you want, I can add npm scripts to the backend package.json to run API/worker with simple commands. Feedback on missing details? 
+ 
