@@ -30,13 +30,18 @@ async function removeFromCommunity(sender, exceptGroupId) {
 async function processOne() {
     const ev = await Event.findOneAndUpdate(
         { status: 'NEW' },
+        // $set belongs to "mongoDB , not mongoose, it's being passed as part of the 2nd object"
         { $set: { status: 'PROCESSING' } },
         { sort: { createdAt: 1 }, new: true }
     );
     if (!ev) return false;
 
     try {
+        //find  whitelist/blacklist status of current event sender
+
+        //whitelist
         const wl = await Whitelist.findOne({ phone: ev.sender }).lean();
+        //blacklist
         const bl = await Blacklist.findOne({ phone: ev.sender }).lean();
 
         if (bl) {
