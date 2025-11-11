@@ -4,11 +4,17 @@ import './App.css';
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:3000';
 
 export default function App() {
+    //Events: recent message filter events (each row shows when, sender, type, decision, rule, excerpt).
     const [events, setEvents] = useState([]);
+    //stats: { totalToday, topRules } for “blocked today” and a mini leaderboard of rules that fired.
     const [stats, setStats] = useState({ totalToday: 0, topRules: [] });
+    //blacklist: array of { _id, phone, reason, ruleId?, createdAt }.
     const [blacklist, setBlacklist] = useState([]);
+    //phone, reason: form controls to add to the blacklist. 
     const [phone, setPhone] = useState('');
+    //phone, reason: form controls to add to the blacklist. 
     const [reason, setReason] = useState('manual');
+    ////whitelist: array of { _id, phone, note, createdAt }.
     const [whitelist, setWhitelist] = useState([]);
 
     const load = async () => {
@@ -20,9 +26,6 @@ export default function App() {
         ]);
         setEvents(ev); setBlacklist(bl); setWhitelist(wl); setStats(st);
     };
-
-    useEffect(() => { load(); }, []);
-
 
     //Add Auto-Refresh to Frontend Dashboard
     useEffect(() => {
@@ -55,7 +58,7 @@ export default function App() {
     return (
         <div className="app-container">
 
-            <h1>WA Anti-Spam Admin {import.meta.env.MODE === 'development' && '<🧪 DEV MODE>'}</h1>
+            <h1>WA Anti-Spam Admin- {import.meta.env.MODE === 'development' && <span>🧪 DEV MODE</span>}</h1>
             <section className="stats-grid">
                 <div className="card">
                     <h3>Stats (today)</h3>
@@ -63,8 +66,8 @@ export default function App() {
 
                     <p>Total Messages: <b>{events.length}</b></p>
                     <ul>
-                        {stats.topRules.map(r => (
-                            <li key={r._id}>{r._id || '—'}: {r.count}</li>
+                        {stats.topRules.map(rule => (
+                            <li key={rule._id}>{rule._id || '—'}: {rule.count}</li>
                         ))}
                     </ul>
                 </div>
